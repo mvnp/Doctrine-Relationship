@@ -2,25 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\BarragemRepository;
+use App\Repository\EstacoesRepository;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity @ORM\Table(name="barragens")
+ * @ORM\Entity @ORM\Table(name="estacoes")
  *
  * @ORM\AttributeOverrides({
  *      @ORM\AttributeOverride(name="id",
- *          column=@ORM\Column(name= "id_bar", type="integer", nullable=true)
+ *          column=@ORM\Column(name= "id_est", type="integer", nullable=true)
  *          )
  * })
  **/
-class Barragem
+class Estacoes
 {
     /**
      * @ORM\Id()
@@ -35,24 +36,14 @@ class Barragem
     private $nome;
 
     /**
-     * @ORM\Column(type="string", length=255, name="rotulo_bar", nullable=false)
+     * @ORM\Column(type="string", length=255, name="responsavel_bar", nullable=false)
      */
-    private $rotulo_bar;
+    private $responsavel;
 
     /**
-     * @ORM\Column(type="integer", name="id_cli", nullable=false)
+     * @ORM\Column(type="string", length=255, name="equipamento_bar", nullable=false)
      */
-    private $cliente;
-
-    /**
-     * @ORM\Column(type="string", length=255, name="image_capa_bar", nullable=false)
-     */
-    private $image_capa;
-
-    /**
-     * @ORM\Column(type="string", length=255, name="sigla_bar", nullable=false)
-     */
-    private $sigla;
+    private $equipamento;
 
     /**
      * @ORM\Column(type="float", name="latitude_bar", nullable=false)
@@ -69,15 +60,33 @@ class Barragem
      */
     private $cadastro;
 
+ 	/**
+	 * @ManyToOne(targetEntity="Barragem", inversedBy="estacoes")
+	 * @JoinColumn(name="id_bar", referencedColumnName="id_bar", nullable=false)
+	 */
+    private $barragem;
+
     /**
      * @var ArrayCollection
-	 * @OneToMany(targetEntity="Estacoes", mappedBy="barragem")
+	 * @OneToMany(targetEntity="Climatologia", mappedBy="estacao")
 	 */
-    private $estacoes;
+    private $registros;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getBarragem(): ?int
+    {
+        return $this->barragem;
+    }
+
+    public function setBarragem(int $barragem): self
+    {
+        $this->barragem = $barragem;
+
+        return $this;
     }
 
     public function getNome(): ?string
@@ -92,50 +101,26 @@ class Barragem
         return $this;
     }
 
-    public function getRotulo(): ?string
+    public function getResponsavel(): ?string
     {
-        return $this->rotulo;
+        return $this->responsavel;
     }
 
-    public function setRotulo(string $rotulo): self
+    public function setResponsavel(string $responsavel): self
     {
-        $this->rotulo = $rotulo;
+        $this->responsavel = $responsavel;
 
         return $this;
     }
 
-    public function getCliente(): ?int
+    public function getEquipamento(): ?string
     {
-        return $this->cliente;
+        return $this->equipamento;
     }
 
-    public function setCliente(int $cliente): self
+    public function setEquipamento(string $equipamento): self
     {
-        $this->cliente = $cliente;
-
-        return $this;
-    }
-
-    public function getImageCapa(): ?string
-    {
-        return $this->image_capa;
-    }
-
-    public function setImageCapa(string $image_capa): self
-    {
-        $this->image_capa = $image_capa;
-
-        return $this;
-    }
-
-    public function getSigla(): ?string
-    {
-        return $this->sigla;
-    }
-
-    public function setSigla(string $sigla): self
-    {
-        $this->sigla = $sigla;
+        $this->equipamento = $equipamento;
 
         return $this;
     }
@@ -176,13 +161,13 @@ class Barragem
         return $this;
     }
 
-    public function getEstacoes(): ArrayCollection
+    public function getRegistros(): ArrayCollection
     {
-        return $this->estacoes;
+        return $this->registros;
     }
 
-    public function setEstacoes(ArrayCollection $estacoes): self
+    public function setRegistros(ArrayColection $registros): self
     {
-        return $this->estacoes = $estacoes;
+        return $this->registros = $registros;
     }
 }
